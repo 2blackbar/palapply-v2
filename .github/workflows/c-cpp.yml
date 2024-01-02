@@ -28,3 +28,10 @@ jobs:
         echo "Building..."
         gcc -O2 -Wall -o "PalApply v2.exe" palapply.c `pkg-config --cflags --libs gtk+-3.0 SDL2_image | sed 's/-lSDL2main//g'` -lpng
         echo "Build completed."
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: PalApply-v2
+        path: |
+          *.exe
