@@ -10,12 +10,17 @@ jobs:
   build:
     runs-on: windows-latest
 
+    defaults:
+      run:
+        shell: msys2 {0}
+
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup GCC
+    - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
       with:
+        update: true
         install: >-
           base-devel
           mingw-w64-x86_64-toolchain
@@ -23,12 +28,7 @@ jobs:
           mingw-w64-x86_64-SDL2_image
           mingw-w64-x86_64-libpng
 
-    - name: Install Perl Modules
-      run: |
-        cpan Pod::Usage
-
     - name: Build
-      shell: bash
       run: |
         echo "Building..."
         gcc -O2 -Wall -o "PalApply v2.exe" palapply.c $(pkg-config --cflags --libs gtk+-3.0 SDL2_image | sed 's/-lSDL2main//g') -lpng
