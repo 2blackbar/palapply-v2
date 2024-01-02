@@ -1,0 +1,30 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup GCC
+      uses: msys2/setup-msys2@v2
+      with:
+        install: >-
+          base-devel
+          mingw-w64-x86_64-toolchain
+          mingw-w64-x86_64-gtk3
+          mingw-w64-x86_64-SDL2_image
+          mingw-w64-x86_64-libpng
+
+    - name: Build
+      run: |
+        echo "Building..."
+        gcc -O2 -Wall -o "PalApply v2.exe" palapply.c `pkg-config --cflags --libs gtk+-3.0 SDL2_image | sed 's/-lSDL2main//g'` -lpng
+        echo "Build completed."
